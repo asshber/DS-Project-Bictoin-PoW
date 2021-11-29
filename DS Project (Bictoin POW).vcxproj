@@ -140,7 +140,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="DS Project (Bictoin POW).cpp" />
-    <ClCompile Include="SHA256.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="SHA256.h" />
