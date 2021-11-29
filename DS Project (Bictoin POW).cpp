@@ -7,22 +7,6 @@
 #include<fstream>
 #include"SHA256.h"
 using namespace std;
-//class Blockchain_Node;
-//vector<Blockchain_Node> Blockchain;
-//struct Details
-//{
-//	//string name;
-//	//string time;
-//	int nonce;
-//	Details(int x):nonce(x){}
-//};
-//stringstream& operator<<(stringstream& dout,Details& obj)
-//{
-//	//dout << obj.name << obj.time;
-//	dout<< obj.nonce;
-//	return dout;
-//}
-int flag = 0;
 fstream fout;
 static int count2 = 0;
 class user
@@ -33,96 +17,80 @@ public:
 	string hash;
 	user()
 	{}
-	user(string a,string b,string c)
-	{
-		name = a;
-		data = b;
-		hash = c;
-	}
+	user(string a,string b,string c):name(a),data(b),hash(c)
+	{}
 };
-class Miners
+fstream& operator<<(fstream& fout, user& obj)
+{
+	fout << obj.data << endl;
+	fout << obj.hash << endl;
+	fout << obj.name << endl;
+	return fout;
+}
+class MinerCommunity
 {
 private:
 	string hash;
 	string data;
 public:
-	Miners(){}
-	Miners(string a, string b)
+	MinerCommunity(){}
+	MinerCommunity(string a, string b)
 	{
 		hash = a;
 		data = b;
 	}
-	 int solve(string puzzle, string data,string MinerName, user& obj)
+	 void solve(string puzzle, string data,string MinerName)
 	 {
 		 stringstream s;
 		 MinerName += ".txt";
 		 string hash;
-		 for (int i = INT_MIN; i < INT_MAX; i++)
+		 for (int i = 0; i < 10000; i++)
 		 {
 			 s << i;
 			 s << data;
 			 hash = sha256(s.str());
 			 if (hash == puzzle)
 			 {
-				 count2++;
-				 if (flag == 0)
+				 if (count2 == 0)
 				 {
-					 flag = i;
 					 fout.open(MinerName.c_str(), ios::app);
-					 cout << "Done by: " << MinerName << endl;
+				     cout << "Done by: " << MinerName << endl;
+					 count2++;
 					 break;
-				 }
-				 else if (flag != 0 && count2 == 2)
-				 {		 
-					 return 0;
-				 }		 
+				 }	
+				 count2++;
 			 }
 			 s.str("");
 		 }
 	 }
 	void mining(user& obj1)
 	{
-		Miners* obj = new Miners(hash,data);
-		std::thread Miner1(&Miners::solve,obj, hash, data, "Miner 1", std::ref(obj1));
-		std::thread Miner2(&Miners::solve,obj, hash, data, "Miner 2", std::ref(obj1));
-		std::thread Miner3(&Miners::solve,obj, hash, data, "Miner 3", std::ref(obj1));
+		MinerCommunity* obj = new MinerCommunity(hash,data);
+		std::thread Miner1(&MinerCommunity::solve,obj, hash, data, "Miner 1");
+		std::thread Miner2(&MinerCommunity::solve,obj, hash, data, "Miner 2");
+		std::thread Miner3(&MinerCommunity::solve,obj, hash, data, "Miner 3");
 		cout << endl << endl << endl << endl;
 		Miner3.join();
 		Miner1.join();
 		Miner2.join();
-		Miner1.detach();
-		Miner2.detach();
-		Miner3.detach();
-		fout << obj1;
+		if(count2>=2)
+			fout << obj1;
 		delete obj;
 	}
-	
-	
 };
-
-fstream& operator<<(fstream& fout, user& obj)
-{
-	fout << obj.data << endl;
-	fout << obj.hash << endl;
-	fout << obj.name << endl;
-
-	return fout;
-}
-
-
 int main()
 {
 	string nam, dat;
 	cout << "Enter name:" << endl;
-	cin >> nam;
-	int nonce = -2147483648;
+	getline(cin, nam);
+	int nonce = 5550;
 	cout << endl << "Enter data:" << endl;
-	cin >> dat;
+	getline(cin, dat);
 	stringstream s;
 	s << nonce;
 	s << dat;
 	string hash = sha256(s.str());
 	user obj(nam, dat, hash);
-	Miners obj2(hash, dat);
+	MinerCommunity obj2(hash, dat);
 	obj2.mining(obj);
 }
