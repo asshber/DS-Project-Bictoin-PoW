@@ -6,10 +6,10 @@
 #include<thread>
 #include<fstream>
 #include"SHA256.h"
-
+#include"json.hpp"
 using namespace std;
 fstream fout;
-class B_Node
+class B_Node //A node for blockchain data structutrre.
 {
 public:
 	string data;

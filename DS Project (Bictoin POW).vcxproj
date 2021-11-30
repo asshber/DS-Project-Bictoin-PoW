@@ -142,6 +142,7 @@
     <ClCompile Include="DS Project (Bictoin POW).cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="json.hpp" />
     <ClInclude Include="SHA256.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
