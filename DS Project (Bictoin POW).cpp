@@ -8,7 +8,6 @@
 #include"SHA256.h"
 using namespace std;
 fstream fout;
-static int count2 = 0;
 class user
 {
 public:
@@ -17,39 +16,48 @@ public:
 	string hash;
 	user()
 	{}
-	user(string a,string b,string c):name(a),data(b),hash(c)
-	{}
+	user(string a,string b,string c):name(a),data(b)
+	{
+		hash = sha256(data);
+	}
 };
 fstream& operator<<(fstream& fout, user& obj)
 {
-	fout << obj.data << endl;
-	fout << obj.hash << endl;
 	fout << obj.name << endl;
+	fout << obj.hash << endl;
+	fout << obj.data << endl;
 	return fout;
 }
 class MinerCommunity
 {
 private:
-	string hash;
+	string puzzle;
 	string data;
+	int count2;
 public:
-	MinerCommunity(){}
+	MinerCommunity()
+	{
+		puzzle = "";
+		data = "";
+		count2 = 0;
+	}
 	MinerCommunity(string a, string b)
 	{
-		hash = a;
+		puzzle = a;
 		data = b;
+		count2 = 0;
 	}
-	 void solve(string puzzle, string data,string MinerName)
+	 void solve(string data,string MinerName)
 	 {
 		 stringstream s;
 		 MinerName += ".txt";
-		 string hash;
+		 string b_hash;
 		 for (int i = 0; i < 10000; i++)
 		 {
 			 s << i;
 			 s << data;
-			 hash = sha256(s.str());
-			 if (hash == puzzle)
+			 b_hash = sha256(s.str());
+			 if (b_hash == puzzle)
 			 {
 				 if (count2 == 0)
 				 {
@@ -65,17 +73,18 @@ public:
 	 }
 	void mining(user& obj1)
 	{
-		MinerCommunity* obj = new MinerCommunity(hash,data);
-		std::thread Miner1(&MinerCommunity::solve,obj, hash, data, "Miner 1");
-		std::thread Miner2(&MinerCommunity::solve,obj, hash, data, "Miner 2");
-		std::thread Miner3(&MinerCommunity::solve,obj, hash, data, "Miner 3");
+		
+		std::thread Miner1(&MinerCommunity::solve,this, data, "Miner 1");
+		std::thread Miner2(&MinerCommunity::solve,this, data, "Miner 2");
+		std::thread Miner3(&MinerCommunity::solve,this, data, "Miner 3");
 		cout << endl << endl << endl << endl;
 		Miner3.join();
 		Miner1.join();
 		Miner2.join();
-		if(count2>=2)
+		if (count2 >= 2)
 			fout << obj1;
-		delete obj;
+		else
+			cout << "Majority didnt verify the puzzle" << endl;
 	}
 };
 int main()
@@ -89,8 +98,8 @@ int main()
 	stringstream s;
 	s << nonce;
 	s << dat;
-	string hash = sha256(s.str());
-	user obj(nam, dat, hash);
-	MinerCommunity obj2(hash, dat);
-	obj2.mining(obj);
+	string puzzle = sha256(s.str());
+	user obj(nam, dat, puzzle);
+	MinerCommunity object(puzzle, dat);
+	object.mining(obj);
 }
