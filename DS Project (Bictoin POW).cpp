@@ -6,24 +6,23 @@
 #include<thread>
 #include<fstream>
 #include"SHA256.h"
+
 using namespace std;
 fstream fout;
-class user
+class B_Node
 {
 public:
-	string name;
 	string data;
 	string hash;
-	user()
+	B_Node()
 	{}
-	user(string a,string b,string c):name(a),data(b)
+	B_Node(string b):data(b)
 	{
 		hash = sha256(data);
 	}
 };
-fstream& operator<<(fstream& fout, user& obj)
+fstream& operator<<(fstream& fout, B_Node& obj)
 {
-	fout << obj.name << endl;
 	fout << obj.hash << endl;
 	fout << obj.data << endl;
 	return fout;
@@ -41,9 +40,9 @@ public:
 		data = "";
 		count2 = 0;
 	}
-	MinerCommunity(string a, string b)
+	MinerCommunity(string b)
 	{
-		puzzle = a;
+		puzzle = "";
 		data = b;
 		count2 = 0;
 	}
@@ -71,7 +70,33 @@ public:
 			 s.str("");
 		 }
 	 }
-	void mining(user& obj1)
+	 void pool_mining(B_Node& obj1)
+	 {
+		 srand(100);
+		 int x = rand();
+		 x %= 3;
+		 stringstream s;
+		 if (x == 0)
+		 {
+			 s << 2000;
+			 s << data;
+			 puzzle = sha256(s.str());
+		 }
+		 else if (x == 1)
+		 {
+			 s << 4000;
+			 s << data;
+			 puzzle = sha256(s.str());
+		 }
+		 else if (x == 2)
+		 {
+			 s << 8000;
+			 s << data;
+			 puzzle = sha256(s.str());
+		 }
+		 mining(obj1);
+	 }
+	void mining(B_Node& obj1)
 	{
 		
 		std::thread Miner1(&MinerCommunity::solve,this, data, "Miner 1");
@@ -90,16 +115,10 @@ public:
 int main()
 {
 	string nam, dat;
-	cout << "Enter name:" << endl;
-	getline(cin, nam);
-	int nonce = 5550;
 	cout << endl << "Enter data:" << endl;
 	getline(cin, dat);
 	stringstream s;
-	s << nonce;
-	s << dat;
-	string puzzle = sha256(s.str());
-	user obj(nam, dat, puzzle);
-	MinerCommunity object(puzzle, dat);
-	object.mining(obj);
+	B_Node obj(dat);
+	MinerCommunity object(dat);
+	object.pool_mining(obj);
 }
