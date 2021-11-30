@@ -22,7 +22,7 @@ public:
 		hash = sha256(data);
 	}
 };
-fstream& operator>>(fstream& fin, B_node& obj);
+fstream& operator>>(fstream& fin, B_Node& obj);
 fstream& operator<<(fstream& fout, B_Node& obj)
 {
 	fout << obj.hash << endl;
