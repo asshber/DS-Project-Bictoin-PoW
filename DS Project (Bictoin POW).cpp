@@ -17,7 +17,7 @@ public:
 	string hash;
 	B_Node()
 	{}
-	B_Node(string b):data(b)
+	B_Node(string b) :data(b)
 	{
 		hash = sha256(data);
 	}
@@ -48,53 +48,53 @@ public:
 		data = b;
 		count2 = 0;
 	}
-	 void solve(string data,string MinerName)
-	 {
-		 stringstream s;
-		 int r = mkdir(MinerName.c_str()); 
-		 string path = "./";
-		 path += MinerName;
-		 path += "/";
-		 path += MinerName;
-		 path += ".txt";
-		 string b_hash;
-		 for (int i = 0; i < 10000; i++)
-		 {
-			 s << i;
-			 s << data;
-			 b_hash = sha256(s.str());
-			 if (b_hash == puzzle)
-			 {
-				 
-				 if (count2 == 0)
-				 {
-					 fout.open(path.c_str(), ios::app);
-				     cout << "Done by: " << MinerName << endl;
-					 count2++;
-					 std::this_thread::sleep_for(std::chrono::seconds(3));
-					 break;
-				 }	
-				 count2++;
-				 std::this_thread::sleep_for(std::chrono::seconds(3));
-			 }
-			 s.str("");
-		 }
-	 }
-	 void pool_mining(B_Node& obj1)
-	 {
-		 stringstream s;
-		 srand(time(0));
-		 int nonce = rand() % 10000;
-		 s << nonce;
-		 s << data;
-		 puzzle = sha256(s.str());
-		 mining(obj1);
-	 }
+	void solve(string data, string MinerName)
+	{
+		stringstream s;
+		int r = mkdir(MinerName.c_str());
+		string path = "./";
+		path += MinerName;
+		path += "/";
+		path += MinerName;
+		path += ".txt";
+		string b_hash;
+		for (int i = 0; i < 10000; i++)
+		{
+			s << i;
+			s << data;
+			b_hash = sha256(s.str());
+			if (b_hash == puzzle)
+			{
+				const auto sleep_time = std::chrono::milliseconds(200);
+				if (count2 == 0)
+				{
+					fout.open(path.c_str(), ios::app);
+					cout << "Done by: " << MinerName << endl;
+					count2++;
+					std::this_thread::sleep_for(sleep_time);
+					break;
+				}
+				count2++;
+				std::this_thread::sleep_for(sleep_time);
+			}
+			s.str("");
+		}
+	}
+	void pool_mining(B_Node& obj1)
+	{
+		stringstream s;
+		srand(time(0));
+		int nonce = rand() % 10000;
+		s << nonce;
+		s << data;
+		puzzle = sha256(s.str());
+		mining(obj1);
+	}
 	void mining(B_Node& obj1)
 	{
-		std::thread Miner1(&MinerCommunity::solve,this, data, "Miner 1");
-		std::thread Miner2(&MinerCommunity::solve,this, data, "Miner 2");
-		std::thread Miner3(&MinerCommunity::solve,this, data, "Miner 3");
+		std::thread Miner1(&MinerCommunity::solve, this, data, "Miner 1");
+		std::thread Miner2(&MinerCommunity::solve, this, data, "Miner 2");
+		std::thread Miner3(&MinerCommunity::solve, this, data, "Miner 3");
 		cout << endl << endl << endl << endl;
 		Miner3.join();
 		Miner1.join();
@@ -107,9 +107,11 @@ public:
 };
 int main()
 {
-	string nam, dat;
-	cout << endl << "Enter data:" << endl;
-	getline(cin, dat);
+	ifstream file("input.json");
+	json j;
+	file >> j;
+	string dat = j["data"];
+	dat.erase(std::remove(dat.begin(), dat.end(), '"'), dat.end());
 	stringstream s;
 	B_Node obj(dat);
 	MinerCommunity object(dat);
