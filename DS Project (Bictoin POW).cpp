@@ -8,6 +8,7 @@
 #include <direct.h>
 #include"SHA256.h"
 #include"json.hpp"
+using json = nlohmann::json;
 using namespace std;
 fstream fout;
 class B_Node //A node for blockchain data structutrre.
