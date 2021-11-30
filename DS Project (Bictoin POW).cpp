@@ -14,18 +14,27 @@ fstream fout;
 class B_Node //A node for blockchain data structutrre.
 {
 public:
+	string Wallet_ID;
 	string data;
 	string hash;
 	B_Node()
 	{}
-	B_Node(string b) :data(b)
+	B_Node(string a,string b):Wallet_ID(a),data(b)
 	{
 		hash = sha256(data);
 	}
 };
+json& operator>>(json& fin, B_Node& obj)
+{
+	obj.data = fin["data"];
+	obj.Wallet_ID = fin["ID"];
+	obj.hash = sha256(obj.data);
+	return fin;
+}
 fstream& operator>>(fstream& fin, B_Node& obj);
 fstream& operator<<(fstream& fout, B_Node& obj)
 {
+	fout << obj.Wallet_ID << endl;
 	fout << obj.hash << endl;
 	fout << obj.data << endl << endl;
 	return fout;
@@ -35,19 +44,20 @@ class MinerCommunity
 private:
 	string puzzle;
 	string data;
-	int count2;
+	int count;
+	int first_nonce;
 public:
 	MinerCommunity()
 	{
 		puzzle = "";
 		data = "";
-		count2 = 0;
+		count = 0;
 	}
 	MinerCommunity(string b)
 	{
 		puzzle = "";
 		data = b;
-		count2 = 0;
+		count = 0;
 	}
 	void solve(string data, string MinerName)
 	{
@@ -67,15 +77,15 @@ public:
 			if (b_hash == puzzle)
 			{
 				const auto sleep_time = std::chrono::milliseconds(200);
-				if (count2 == 0)
+				if (count == 0)
 				{
 					fout.open(path.c_str(), ios::app);
 					cout << "Done by: " << MinerName << endl;
-					count2++;
+					count++;
 					std::this_thread::sleep_for(sleep_time);
 					break;
 				}
-				count2++;
+					count++;
 				std::this_thread::sleep_for(sleep_time);
 			}
 			s.str("");
@@ -100,7 +110,7 @@ public:
 		Miner3.join();
 		Miner1.join();
 		Miner2.join();
-		if (count2 >= 2)
+		if (count >= 2)
 			fout << obj1;
 		else
 			cout << "Majority didnt verify the puzzle" << endl;
@@ -108,13 +118,24 @@ public:
 };
 int main()
 {
+	//ifstream file("input.json");
+	//json j;
+	//file >> j;
+	//int i = 2;
+	//B_Node obj();
+	//while (i)
+	//{
+	//	j >> obj;
+	//	MinerCommunity object(obj.data);
+	//	object.pool_mining(obj);
+	//	i--;
+	//}
 	ifstream file("input.json");
 	json j;
 	file >> j;
 	string dat = j["data"];
-	dat.erase(std::remove(dat.begin(), dat.end(), '"'), dat.end());
-	stringstream s;
-	B_Node obj(dat);
+	string id = j["ID"];
+	B_Node obj(id,dat);
 	MinerCommunity object(dat);
 	object.pool_mining(obj);
 }
