@@ -5,6 +5,7 @@
 #include <chrono>
 #include<thread>
 #include<fstream>
+#include <direct.h>
 #include"SHA256.h"
 #include"json.hpp"
 using namespace std;
@@ -21,10 +22,11 @@ public:
 		hash = sha256(data);
 	}
 };
+fstream& operator>>(fstream& fin, B_node& obj);
 fstream& operator<<(fstream& fout, B_Node& obj)
 {
 	fout << obj.hash << endl;
-	fout << obj.data << endl;
+	fout << obj.data << endl << endl;
 	return fout;
 }
 class MinerCommunity
@@ -49,7 +51,12 @@ public:
 	 void solve(string data,string MinerName)
 	 {
 		 stringstream s;
-		 MinerName += ".txt";
+		 int r = mkdir(MinerName.c_str()); 
+		 string path = "./";
+		 path += MinerName;
+		 path += "/";
+		 path += MinerName;
+		 path += ".txt";
 		 string b_hash;
 		 for (int i = 0; i < 10000; i++)
 		 {
@@ -58,9 +65,10 @@ public:
 			 b_hash = sha256(s.str());
 			 if (b_hash == puzzle)
 			 {
+				 std::this_thread::sleep_for(std::chrono::seconds(1));
 				 if (count2 == 0)
 				 {
-					 fout.open(MinerName.c_str(), ios::app);
+					 fout.open(path.c_str(), ios::app);
 				     cout << "Done by: " << MinerName << endl;
 					 count2++;
 					 break;
@@ -72,33 +80,16 @@ public:
 	 }
 	 void pool_mining(B_Node& obj1)
 	 {
-		 srand(100);
-		 int x = rand();
-		 x %= 3;
 		 stringstream s;
-		 if (x == 0)
-		 {
-			 s << 2000;
-			 s << data;
-			 puzzle = sha256(s.str());
-		 }
-		 else if (x == 1)
-		 {
-			 s << 4000;
-			 s << data;
-			 puzzle = sha256(s.str());
-		 }
-		 else if (x == 2)
-		 {
-			 s << 8000;
-			 s << data;
-			 puzzle = sha256(s.str());
-		 }
+		 srand(time(0));
+		 int nonce = rand() % 10000;
+		 s << nonce;
+		 s << data;
+		 puzzle = sha256(s.str());
 		 mining(obj1);
 	 }
 	void mining(B_Node& obj1)
 	{
-		
 		std::thread Miner1(&MinerCommunity::solve,this, data, "Miner 1");
 		std::thread Miner2(&MinerCommunity::solve,this, data, "Miner 2");
 		std::thread Miner3(&MinerCommunity::solve,this, data, "Miner 3");
