@@ -65,15 +65,17 @@ public:
 			 b_hash = sha256(s.str());
 			 if (b_hash == puzzle)
 			 {
-				 std::this_thread::sleep_for(std::chrono::seconds(1));
+				 
 				 if (count2 == 0)
 				 {
 					 fout.open(path.c_str(), ios::app);
 				     cout << "Done by: " << MinerName << endl;
 					 count2++;
+					 std::this_thread::sleep_for(std::chrono::seconds(3));
 					 break;
 				 }	
 				 count2++;
+				 std::this_thread::sleep_for(std::chrono::seconds(3));
 			 }
 			 s.str("");
 		 }
