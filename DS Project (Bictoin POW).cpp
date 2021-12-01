@@ -92,20 +92,21 @@ public:
 		stringstream path;
 		path << "./" << MinerName << "/" << MinerName << ".txt";
 		string b_hash;
+		const auto sleep_time = std::chrono::milliseconds(200);
 		for (int i = 0; i < 10000; i++)
 		{
+			if (count >= 3)
+				break;
 			s << i;
 			s << data;
 			b_hash = sha256(s.str());
 			if (b_hash == puzzle)
 			{
-				const auto sleep_time = std::chrono::milliseconds(200);
 				if (count == 0)
 				{
+					count++;
 					fout.open(path.str(), ios::app);
 					cout << "Done by: " << MinerName << endl;
-					count++;
-					
 					break;
 				}
 					count++;
@@ -129,12 +130,15 @@ public:
 		std::thread Miner1(&MinerCommunity::solve, this, data, "Miner 1");
 		std::thread Miner2(&MinerCommunity::solve, this, data, "Miner 2");
 		std::thread Miner3(&MinerCommunity::solve, this, data, "Miner 3");
+		std::thread Miner4(&MinerCommunity::solve, this, data, "Miner 4");
+		std::thread Miner5(&MinerCommunity::solve, this, data, "Miner 5");
 		cout << endl << endl << endl << endl;
 		Miner3.join();
 		Miner1.join();
 		Miner2.join();
-		
-		if (count >= 2)
+		Miner4.join();
+		Miner5.join();
+		if (count >= 3)
 			fout << obj1;
 		else
 			cout << "Majority didnt verify the puzzle" << endl;
