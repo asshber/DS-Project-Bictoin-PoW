@@ -23,14 +23,15 @@ public:
 	{
 		hash = sha256(data);
 	}
+	B_Node operator=(json& fin)
+	{
+		data = fin["data"];
+		Wallet_ID = fin["ID"];
+		hash = sha256(data);
+		return *this;
+	}
 };
-json& operator>>(json& fin, B_Node& obj)
-{
-	obj.data = fin["data"];
-	obj.Wallet_ID = fin["ID"];
-	obj.hash = sha256(obj.data);
-	return fin;
-}
+
 fstream& operator>>(fstream& fin, B_Node& obj);
 fstream& operator<<(fstream& fout, B_Node& obj)
 {
@@ -118,24 +119,23 @@ public:
 };
 int main()
 {
-	//ifstream file("input.json");
-	//json j;
-	//file >> j;
-	//int i = 2;
-	//B_Node obj();
-	//while (i)
-	//{
-	//	j >> obj;
-	//	MinerCommunity object(obj.data);
-	//	object.pool_mining(obj);
-	//	i--;
-	//}
-	ifstream file("input.json");
+	ifstream file("input.txt");
+	json j;
+	
+	int i = 1;
+	
+	while (i)
+	{
+		file >> j;
+		B_Node obj(j["key"],j["data"]);
+		i--;
+	}
+	/*ifstream file("input.json");
 	json j;
 	file >> j;
 	string dat = j["data"];
 	string id = j["ID"];
 	B_Node obj(id,dat);
 	MinerCommunity object(dat);
-	object.pool_mining(obj);
+	object.pool_mining(obj);*/
 }
