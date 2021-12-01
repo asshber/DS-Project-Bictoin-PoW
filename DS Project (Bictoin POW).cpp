@@ -31,12 +31,18 @@ public:
 	
 };
 
-fstream& operator>>(fstream& fin, B_Node& obj);//for reading from file
+fstream& operator>>(fstream& fin, B_Node& obj)//for reading from file
+{
+	getline(fin, obj.Wallet_ID);
+	getline(fin, obj.hash);
+	getline(fin, obj.data);
+	return fin;
+}
 fstream& operator<<(fstream& fout, B_Node& obj)//for writing in file
 {
 	fout << obj.Wallet_ID << endl;
 	fout << obj.hash << endl;
-	fout << obj.data << endl << endl;
+	fout << obj.data << endl;
 	return fout;
 }
 class MinerCommunity//Miners are in this community
@@ -47,6 +53,20 @@ private:
 	int count;
 	int first_nonce;
 public:
+	int reward_count(string MinerName)
+	{
+		stringstream path;
+		int rewardcount = 0;
+		path << "./" << MinerName << "/" << MinerName << ".txt";
+		fstream file(path.str(), ios::in);
+		B_Node obj;
+		while (file >> obj)
+		{
+			rewardcount++;
+		}
+		return rewardcount;
+
+	}
 	MinerCommunity()
 	{
 		puzzle = "";
@@ -139,6 +159,8 @@ int main()//main
 		if (file.peek() == EOF)
 			break;
 	}
-	
+	cout << "Rewrad count for Miner 1 is : " << object.reward_count("Miner 1")<<endl;
+	cout << "Rewrad count for Miner 2 is : " << object.reward_count("Miner 2") << endl;
+	cout << "Rewrad count for Miner 3 is : " << object.reward_count("Miner 3") << endl;
 }
 //blockchain POW
