@@ -75,11 +75,8 @@ public:
 	{
 		stringstream s;
 		int r = mkdir(MinerName.c_str());
-		string path = "./";
-		path += MinerName;
-		path += "/";
-		path += MinerName;
-		path += ".txt";
+		stringstream path;
+		path << "./" << MinerName << "/" << MinerName << ".txt";
 		string b_hash;
 		for (int i = 0; i < 10000; i++)
 		{
@@ -91,7 +88,7 @@ public:
 				const auto sleep_time = std::chrono::milliseconds(200);
 				if (count == 0)
 				{
-					fout.open(path.c_str(), ios::app);
+					fout.open(path.str(), ios::app);
 					cout << "Done by: " << MinerName << endl;
 					count++;
 					std::this_thread::sleep_for(sleep_time);
@@ -122,10 +119,14 @@ public:
 		Miner3.join();
 		Miner1.join();
 		Miner2.join();
+		//Miner1.detach();
+		//Miner2.detach();
+		//Miner3.detach();
 		if (count >= 2)
 			fout << obj1;
 		else
 			cout << "Majority didnt verify the puzzle" << endl;
+		fout.close();
 	}
 };
 int main()
