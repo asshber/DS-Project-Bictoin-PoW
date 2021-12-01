@@ -121,7 +121,7 @@ public:
 		fout.close();
 	}
 };
-int main()
+int main()//main
 {
 	string id, data;
 	ifstream file("input.txt");
