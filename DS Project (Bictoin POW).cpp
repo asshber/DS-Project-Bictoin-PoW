@@ -23,13 +23,18 @@ public:
 	{
 		hash = sha256(data);
 	}
-	B_Node operator=(json& fin)
-	{
-		data = fin["data"];
-		Wallet_ID = fin["ID"];
+	void set(string a, string b) {
+		data = b;
+		Wallet_ID = a;
 		hash = sha256(data);
-		return *this;
 	}
+	//B_Node operator=(json& fin)
+	//{
+	//	data = fin["data"];
+	//	Wallet_ID = fin["ID"];
+	//	hash = sha256(data);
+	//	return *this;
+	//}
 };
 
 fstream& operator>>(fstream& fin, B_Node& obj);
@@ -58,6 +63,12 @@ public:
 	{
 		puzzle = "";
 		data = b;
+		count = 0;
+	}
+	void set(string d)
+	{
+		data = d;
+		puzzle = "";
 		count = 0;
 	}
 	void solve(string data, string MinerName)
@@ -119,23 +130,22 @@ public:
 };
 int main()
 {
+	string id, data;
 	ifstream file("input.txt");
 	json j;
-	
-	int i = 1;
-	
-	while (i)
+	B_Node obj;
+	MinerCommunity object;
+	while (!file.eof())
 	{
 		file >> j;
-		B_Node obj(j["key"],j["data"]);
-		i--;
+		data = j["data"];
+		id = j["ID"];
+		obj.set(id, data);
+		object.set(data);
+		object.pool_mining(obj);
+		if (file.peek() == EOF)
+			break;
 	}
-	/*ifstream file("input.json");
-	json j;
-	file >> j;
-	string dat = j["data"];
-	string id = j["ID"];
-	B_Node obj(id,dat);
-	MinerCommunity object(dat);
-	object.pool_mining(obj);*/
+	//MinerCommunity object(dat);
+	//object.pool_mining(obj);
 }
