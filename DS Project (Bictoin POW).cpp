@@ -31,15 +31,15 @@ public:
 	
 };
 
-fstream& operator>>(fstream& fin, B_Node& obj);
-fstream& operator<<(fstream& fout, B_Node& obj)
+fstream& operator>>(fstream& fin, B_Node& obj);//for reading from file
+fstream& operator<<(fstream& fout, B_Node& obj)//for writing in file
 {
 	fout << obj.Wallet_ID << endl;
 	fout << obj.hash << endl;
 	fout << obj.data << endl << endl;
 	return fout;
 }
-class MinerCommunity
+class MinerCommunity//Miners are in this community
 {
 private:
 	string puzzle;
@@ -65,7 +65,7 @@ public:
 		puzzle = "";
 		count = 0;
 	}
-	void solve(string data, string MinerName)
+	void solve(string data, string MinerName)//Miner will solve through this algorithm
 	{
 		stringstream s;
 		int r = mkdir(MinerName.c_str());
@@ -94,7 +94,7 @@ public:
 			s.str("");
 		}
 	}
-	void pool_mining(B_Node& obj1)
+	void pool_mining(B_Node& obj1)//it will pass random puzzle to miners
 	{
 		stringstream s;
 		srand(time(0));
@@ -104,7 +104,7 @@ public:
 		puzzle = sha256(s.str());
 		mining(obj1);
 	}
-	void mining(B_Node& obj1)
+	void mining(B_Node& obj1)//Miners are in this function
 	{
 		std::thread Miner1(&MinerCommunity::solve, this, data, "Miner 1");
 		std::thread Miner2(&MinerCommunity::solve, this, data, "Miner 2");
