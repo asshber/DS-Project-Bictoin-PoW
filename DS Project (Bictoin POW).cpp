@@ -148,7 +148,7 @@ public:
 int main()//main
 {
 	string id, data;
-	ifstream file("input.txt");
+	ifstream file("input.json");
 	json j;
 	B_Node obj;
 	MinerCommunity object;
