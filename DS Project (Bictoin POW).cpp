@@ -105,7 +105,8 @@ public:
 				{
 					count++;
 					fout.open(path.str(), ios::app);
-					cout << "Done by: " << MinerName << endl;
+					cout << "Mining Result: " << endl;
+					cout << "Done by: " << MinerName << endl << endl << endl;
 					break;
 				}
 					count++;
@@ -126,12 +127,12 @@ public:
 	}
 	void mining(B_Node& obj1)//Miners are in this function
 	{
+		
 		std::thread Miner1(&MinerCommunity::solve, this, data, "Miner 1");
 		std::thread Miner2(&MinerCommunity::solve, this, data, "Miner 2");
 		std::thread Miner3(&MinerCommunity::solve, this, data, "Miner 3");
 		std::thread Miner4(&MinerCommunity::solve, this, data, "Miner 4");
 		std::thread Miner5(&MinerCommunity::solve, this, data, "Miner 5");
-		cout << endl << endl << endl << endl;
 		Miner3.join();
 		Miner1.join();
 		Miner2.join();
@@ -162,6 +163,8 @@ int main()//main
 		if (file.peek() == EOF)
 			break;
 	}
+	cout << endl;
+	cout << "Reward Status: " << endl;
 	cout << "Rewrad count for Miner 1 is : " << object.reward_count("Miner 1")<<endl;
 	cout << "Rewrad count for Miner 2 is : " << object.reward_count("Miner 2") << endl;
 	cout << "Rewrad count for Miner 3 is : " << object.reward_count("Miner 3") << endl;
@@ -169,3 +172,8 @@ int main()//main
 	cout << "Rewrad count for Miner 5 is : " << object.reward_count("Miner 5") << endl;
 }
 //blockchain POW
+//By:
+//Muhammad Anas Khan
+//Muhammad Aamir Khan
+//Ali Ashber
+//Umer Saad Jehangiri
