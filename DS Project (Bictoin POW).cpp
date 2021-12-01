@@ -28,13 +28,7 @@ public:
 		Wallet_ID = a;
 		hash = sha256(data);
 	}
-	//B_Node operator=(json& fin)
-	//{
-	//	data = fin["data"];
-	//	Wallet_ID = fin["ID"];
-	//	hash = sha256(data);
-	//	return *this;
-	//}
+	
 };
 
 fstream& operator>>(fstream& fin, B_Node& obj);
@@ -91,11 +85,11 @@ public:
 					fout.open(path.str(), ios::app);
 					cout << "Done by: " << MinerName << endl;
 					count++;
-					std::this_thread::sleep_for(sleep_time);
+					
 					break;
 				}
 					count++;
-				std::this_thread::sleep_for(sleep_time);
+					
 			}
 			s.str("");
 		}
@@ -119,9 +113,7 @@ public:
 		Miner3.join();
 		Miner1.join();
 		Miner2.join();
-		//Miner1.detach();
-		//Miner2.detach();
-		//Miner3.detach();
+		
 		if (count >= 2)
 			fout << obj1;
 		else
@@ -147,6 +139,5 @@ int main()
 		if (file.peek() == EOF)
 			break;
 	}
-	//MinerCommunity object(dat);
-	//object.pool_mining(obj);
+	
 }
