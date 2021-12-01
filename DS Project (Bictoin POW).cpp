@@ -14,18 +14,18 @@ fstream fout;
 class B_Node //A node for blockchain data structutrre.
 {
 public:
-	string Wallet_ID;
+	string Block_ID;
 	string data;
 	string hash;
 	B_Node()
 	{}
-	B_Node(string a,string b):Wallet_ID(a),data(b)
+	B_Node(string a,string b):Block_ID(a),data(b)
 	{
 		hash = sha256(data);
 	}
 	void set(string a, string b) {
 		data = b;
-		Wallet_ID = a;
+		Block_ID = a;
 		hash = sha256(data);
 	}
 	
@@ -33,14 +33,14 @@ public:
 
 fstream& operator>>(fstream& fin, B_Node& obj)//for reading from file
 {
-	getline(fin, obj.Wallet_ID);
+	getline(fin, obj.Block_ID);
 	getline(fin, obj.hash);
 	getline(fin, obj.data);
 	return fin;
 }
 fstream& operator<<(fstream& fout, B_Node& obj)//for writing in file
 {
-	fout << obj.Wallet_ID << endl;
+	fout << obj.Block_ID << endl;
 	fout << obj.hash << endl;
 	fout << obj.data << endl;
 	return fout;
@@ -92,7 +92,6 @@ public:
 		stringstream path;
 		path << "./" << MinerName << "/" << MinerName << ".txt";
 		string b_hash;
-		const auto sleep_time = std::chrono::milliseconds(200);
 		for (int i = 0; i < 10000; i++)
 		{
 			if (count >= 3)
