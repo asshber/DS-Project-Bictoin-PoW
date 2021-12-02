@@ -165,11 +165,11 @@ int main()//main
 	}
 	cout << endl;
 	cout << "Reward Status: " << endl;
-	cout << "Rewrad count for Miner 1 is : " << object.reward_count("Miner 1")<<endl;
-	cout << "Rewrad count for Miner 2 is : " << object.reward_count("Miner 2") << endl;
-	cout << "Rewrad count for Miner 3 is : " << object.reward_count("Miner 3") << endl;
-	cout << "Rewrad count for Miner 4 is : " << object.reward_count("Miner 4") << endl;
-	cout << "Rewrad count for Miner 5 is : " << object.reward_count("Miner 5") << endl;
+	cout << "Reward count for Miner 1 is : " << object.reward_count("Miner 1")<<endl;
+	cout << "Reward count for Miner 2 is : " << object.reward_count("Miner 2") << endl;
+	cout << "Reward count for Miner 3 is : " << object.reward_count("Miner 3") << endl;
+	cout << "Reward count for Miner 4 is : " << object.reward_count("Miner 4") << endl;
+	cout << "Reward count for Miner 5 is : " << object.reward_count("Miner 5") << endl;
 }
 //blockchain POW
 //By:
